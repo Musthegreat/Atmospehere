@@ -1,0 +1,83 @@
+[gd_scene load_steps=12 format=3 uid="uid://c6haa5s26j41c"]
+
+[ext_resource type="Script" path="res://Scenes/Player/scripts/movement.gd" id="1_cogja"]
+[ext_resource type="Script" path="res://Scenes/Player/scripts/hands.gd" id="1_ohxk7"]
+[ext_resource type="Texture2D" uid="uid://dpri44j1eywr3" path="res://sprites/Sprite-0002.png" id="2_rjk5a"]
+[ext_resource type="Texture2D" uid="uid://b4ofcvsxjohln" path="res://sprites/Hands.png" id="3_80sx2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iwxqc"]
+atlas = ExtResource("2_rjk5a")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p3dhd"]
+atlas = ExtResource("2_rjk5a")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4egap"]
+atlas = ExtResource("2_rjk5a")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uqm8f"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iwxqc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p3dhd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4egap")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_syk03"]
+radius = 0.136374
+height = 0.556105
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jtf2u"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_oun2q"]
+plane = Plane(0, 0, 1, 0)
+
+[node name="Player" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00570583, -0.00579253, 0.00162482)
+script = ExtResource("1_cogja")
+
+[node name="Sprite" type="AnimatedSprite3D" parent="."]
+shaded = true
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_uqm8f")
+
+[node name="Hitbox" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0742231, 0)
+shape = SubResource("CapsuleShape3D_syk03")
+
+[node name="Left hand" type="RigidBody3D" parent="."]
+script = ExtResource("1_ohxk7")
+
+[node name="Sprite3D" type="Sprite3D" parent="Left hand"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+texture = ExtResource("3_80sx2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Left hand"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+shape = SubResource("BoxShape3D_jtf2u")
+disabled = true
+
+[node name="Right hand" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.249902, -0.0742231, 0)
+
+[node name="Sprite3D2" type="Sprite3D" parent="Right hand"]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0.0299849, 0, 0)
+texture_filter = 2
+texture = ExtResource("3_80sx2")
+
+[node name="Mouse collider" type="Area3D" parent="."]
+collision_layer = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mouse collider"]
+shape = SubResource("WorldBoundaryShape3D_oun2q")
