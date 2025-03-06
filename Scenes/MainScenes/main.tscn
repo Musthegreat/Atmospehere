@@ -1,11 +1,12 @@
-[gd_scene load_steps=20 format=3 uid="uid://iyqt4uisolwr"]
+[gd_scene load_steps=25 format=3 uid="uid://iyqt4uisolwr"]
 
 [ext_resource type="PackedScene" uid="uid://c6haa5s26j41c" path="res://Scenes/Player/Player.tscn" id="2_merwf"]
 [ext_resource type="PackedScene" uid="uid://d03g34o8nplb3" path="res://Scenes/Player/Hand.tscn" id="2_ovkp8"]
-[ext_resource type="Script" path="res://Scenes/Player/scripts/Classes/Item/Metal.gd" id="2_safau"]
-[ext_resource type="PackedScene" uid="uid://bfn2xoheafr3m" path="res://Scenes/Player/mouse_collider.tscn" id="5_2w68m"]
-[ext_resource type="Script" path="res://Scenes/Player/scripts/Classes/Item/Item.gd" id="5_4jbq1"]
+[ext_resource type="Script" path="res://Scenes/scripts/Classes/Item/Metal.gd" id="2_safau"]
+[ext_resource type="Script" path="res://Scenes/scripts/Classes/Item/Item.gd" id="5_4jbq1"]
 [ext_resource type="PackedScene" uid="uid://yuvpq3xdnsfy" path="res://Models/Exports/m1911/m1911_bolt.glb" id="5_oli1v"]
+[ext_resource type="Script" path="res://Scenes/MainScenes/camera.gd" id="7_0fgk2"]
+[ext_resource type="Shader" uid="uid://bonfdoe6er6o8" path="res://Scenes/MainScenes/LightBeam.tres" id="8_mwyat"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bkggy"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -51,10 +52,23 @@ data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0
 
 [sub_resource type="BoxMesh" id="BoxMesh_htd6i"]
 
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_y0anp"]
+points = PackedVector3Array(-0.5, -0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, -0.5)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_m7ox3"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pn6dr"]
 size = Vector3(10, 10, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wsbbt"]
+render_priority = 0
+shader = ExtResource("8_mwyat")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xnpqy"]
+width = 26
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_nq1pj"]
+plane = Plane(0, 0, 1, 0)
 
 [node name="Node2D" type="Node"]
 
@@ -82,26 +96,30 @@ collision_mask = 3
 shape = SubResource("ConcavePolygonShape3D_8g5m4")
 
 [node name="Player" parent="Game" instance=ExtResource("2_merwf")]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 1, 3.498, -1.52146)
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -2.6146, 4.23753, -0.137915)
 
-[node name="Hand" parent="Game" node_paths=PackedStringArray("PLAYER") instance=ExtResource("2_ovkp8")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 3.498, 0)
-PLAYER = NodePath("../Player")
+[node name="Hand" parent="Game" node_paths=PackedStringArray("player", "camera") instance=ExtResource("2_ovkp8")]
+transform = Transform3D(1, 0, 0, 0, 0.999335, -0.0364693, 0, 0.0364693, 0.999335, 1.38022, 4.18414, 0.0285599)
+mass = 0.029
+player = NodePath("../Player")
+camera = NodePath("../Camera3D")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="Game"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8058, 2.95589, 0)
-mass = 0.01
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.15404, 2.95589, -1.91145)
+mass = 1.654
 script = ExtResource("5_4jbq1")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Game/RigidBody3D"]
+transform = Transform3D(5.30413, 0, 0, 0, 1, 0, 0, 0, 4.28381, 0, 0, 0)
 mesh = SubResource("BoxMesh_htd6i")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Game/RigidBody3D"]
-shape = SubResource("BoxShape3D_m7ox3")
+transform = Transform3D(5.30413, 0, 0, 0, 1, 0, 0, 0, 4.28381, 0, 0, 0)
+shape = SubResource("ConvexPolygonShape3D_y0anp")
 
 [node name="RigidBody3D2" type="RigidBody3D" parent="Game"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8058, 4.11219, 0)
-mass = 0.01
+mass = 0.094
 script = ExtResource("5_4jbq1")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Game/RigidBody3D2"]
@@ -111,8 +129,8 @@ mesh = SubResource("BoxMesh_htd6i")
 shape = SubResource("BoxShape3D_m7ox3")
 
 [node name="RigidBody3D3" type="RigidBody3D" parent="Game"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8058, 5.25271, 0)
-mass = 0.01
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.35485, 5.25271, 0)
+mass = 0.535
 script = ExtResource("5_4jbq1")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Game/RigidBody3D3"]
@@ -133,12 +151,22 @@ shape = SubResource("BoxShape3D_pn6dr")
 [node name="m1911_bolt" parent="Game/Metal" instance=ExtResource("5_oli1v")]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 
-[node name="Mouse collider" parent="Game" instance=ExtResource("5_2w68m")]
+[node name="LightBeam" type="Sprite3D" parent="Game"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.9204, 1.36939, 0)
+material_override = SubResource("ShaderMaterial_wsbbt")
+offset = Vector2(0, 256)
+billboard = 1
+texture = SubResource("NoiseTexture2D_xnpqy")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.988972, 0.148103, 0, -0.148103, 0.988972, 0.623931, 6.43135, 11.828)
-current = true
-fov = 60.5992
+[node name="Camera3D" type="Camera3D" parent="Game" node_paths=PackedStringArray("hand")]
+transform = Transform3D(1, 0, 0, 0, 0.999561, 0.0296139, 0, -0.0296139, 0.999561, 2.2487, 5.83074, 8.09982)
+script = ExtResource("7_0fgk2")
+hand = NodePath("../Hand")
 
-[editable path="Game/Player"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Game"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.45, -3.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Game/StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_nq1pj")
+
 [editable path="Game/Metal/m1911_bolt"]

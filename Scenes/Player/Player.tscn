@@ -1,7 +1,10 @@
 [gd_scene load_steps=8 format=3 uid="uid://c6haa5s26j41c"]
 
-[ext_resource type="Script" path="res://Scenes/Player/scripts/movement.gd" id="1_cogja"]
+[ext_resource type="Script" path="res://Scenes/scripts/movement.gd" id="1_cogja"]
 [ext_resource type="Texture2D" uid="uid://dpri44j1eywr3" path="res://sprites/Sprite-0002.png" id="2_rjk5a"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3ig7d"]
+size = Vector3(0.221741, 0.475586, 0.0948563)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_iwxqc"]
 atlas = ExtResource("2_rjk5a")
@@ -32,9 +35,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_3ig7d"]
-size = Vector3(0.221741, 0.475586, 0.0948563)
-
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, -0.137915)
 collision_layer = 2
@@ -42,12 +42,12 @@ collision_mask = 2
 axis_lock_linear_z = true
 script = ExtResource("1_cogja")
 
+[node name="Hitbox" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0062561, -0.0678711, -0.0343666)
+shape = SubResource("BoxShape3D_3ig7d")
+
 [node name="Sprite" type="AnimatedSprite3D" parent="."]
 shaded = true
 alpha_cut = 2
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_uqm8f")
-
-[node name="Hitbox" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0062561, -0.0678711, -0.0343666)
-shape = SubResource("BoxShape3D_3ig7d")

@@ -17,8 +17,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Server="*res://Scenes/Player/scripts/Singletons/Server.gd"
-Setup="*res://Scenes/Player/scripts/Singletons/Setup.gd"
+Server="*res://Scenes/scripts/Singletons/Server.gd"
+Setup="*res://Scenes/scripts/Singletons/Setup.gd"
+handStuff="*res://Scenes/scripts/Singletons/handStuff.gd"
 
 [display]
 
@@ -27,6 +28,10 @@ window/vsync/vsync_mode=0
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/ridiculous_coding/plugin.cfg")
+
+[filesystem]
+
+import/blender/enabled=false
 
 [input]
 
@@ -59,6 +64,11 @@ ui_down={
 Mouse1={
 "deadzone": 0.5,
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
+}
+Mouse2={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":2,"canceled":false,"pressed":false,"double_click":false,"script":null)
 ]
 }
 

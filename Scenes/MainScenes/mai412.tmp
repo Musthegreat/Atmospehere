@@ -1,0 +1,159 @@
+[gd_scene load_steps=23 format=3 uid="uid://iyqt4uisolwr"]
+
+[ext_resource type="PackedScene" uid="uid://c6haa5s26j41c" path="res://Scenes/Player/Player.tscn" id="2_merwf"]
+[ext_resource type="PackedScene" uid="uid://d03g34o8nplb3" path="res://Scenes/Player/Hand.tscn" id="2_ovkp8"]
+[ext_resource type="Script" path="res://Scenes/scripts/Classes/Item/Metal.gd" id="2_safau"]
+[ext_resource type="Script" path="res://Scenes/scripts/Classes/Item/Item.gd" id="5_4jbq1"]
+[ext_resource type="PackedScene" uid="uid://yuvpq3xdnsfy" path="res://Models/Exports/m1911/m1911_bolt.glb" id="5_oli1v"]
+[ext_resource type="Script" path="res://Scenes/MainScenes/camera.gd" id="7_0fgk2"]
+[ext_resource type="Shader" uid="uid://bonfdoe6er6o8" path="res://Scenes/MainScenes/LightBeam.tres" id="8_mwyat"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_bkggy"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_otuhr"]
+sky_material = SubResource("ProceduralSkyMaterial_bkggy")
+
+[sub_resource type="Environment" id="Environment_c6tl6"]
+background_mode = 2
+sky = SubResource("Sky_otuhr")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_m3dj1"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1vaw4"]
+noise = SubResource("FastNoiseLite_m3dj1")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bev6w"]
+noise_type = 3
+frequency = 0.0043
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_f7yil"]
+as_normal_map = true
+bump_strength = 26.3
+normalize = false
+noise = SubResource("FastNoiseLite_bev6w")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hgo82"]
+albedo_color = Color(0.128176, 0.252515, 0.153704, 1)
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_f7yil")
+heightmap_scale = 6.829
+heightmap_texture = SubResource("NoiseTexture2D_1vaw4")
+grow_amount = -0.914
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2kfmu"]
+material = SubResource("StandardMaterial3D_hgo82")
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_8g5m4"]
+data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_htd6i"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m7ox3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pn6dr"]
+size = Vector3(10, 10, 10)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wsbbt"]
+render_priority = 0
+shader = ExtResource("8_mwyat")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xnpqy"]
+width = 26
+
+[node name="Node2D" type="Node"]
+
+[node name="Game" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Game"]
+environment = SubResource("Environment_c6tl6")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Game"]
+transform = Transform3D(-0.848067, -0.497566, 0.182237, 0.473011, -0.555846, 0.683591, -0.238836, 0.665931, 0.706749, 1.8138, 6.50168, 4.96615)
+shadow_enabled = true
+shadow_bias = 0.0
+shadow_blur = 0.0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Game"]
+transform = Transform3D(578.726, 0, 0, 0, 9, 0, 0, 0, 530.56, 0, 0.891534, 0)
+mesh = SubResource("PlaneMesh_2kfmu")
+skeleton = NodePath("")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Game/MeshInstance3D"]
+collision_layer = 3
+collision_mask = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Game/MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_8g5m4")
+
+[node name="Player" parent="Game" instance=ExtResource("2_merwf")]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, -1.6514, 5.85111, -1.52146)
+
+[node name="Hand" parent="Game" node_paths=PackedStringArray("player", "camera") instance=ExtResource("2_ovkp8")]
+transform = Transform3D(1, 0, 0, 0, 0.999335, -0.0364693, 0, 0.0364693, 0.999335, 1.35965, 4.15151, 0)
+player = NodePath("../Player")
+camera = NodePath("../Camera3D")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="Game"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.15404, 2.95589, -1.91145)
+mass = 0.01
+script = ExtResource("5_4jbq1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Game/RigidBody3D"]
+transform = Transform3D(5.30413, 0, 0, 0, 1, 0, 0, 0, 4.28381, 0, 0, 0)
+mesh = SubResource("BoxMesh_htd6i")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Game/RigidBody3D"]
+transform = Transform3D(5.30413, 0, 0, 0, 1, 0, 0, 0, 4.28381, 0, 0, 0)
+shape = SubResource("BoxShape3D_m7ox3")
+
+[node name="RigidBody3D2" type="RigidBody3D" parent="Game"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8058, 4.11219, 0)
+mass = 0.01
+script = ExtResource("5_4jbq1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Game/RigidBody3D2"]
+mesh = SubResource("BoxMesh_htd6i")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Game/RigidBody3D2"]
+shape = SubResource("BoxShape3D_m7ox3")
+
+[node name="RigidBody3D3" type="RigidBody3D" parent="Game"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.35485, 5.25271, 0)
+mass = 0.01
+script = ExtResource("5_4jbq1")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Game/RigidBody3D3"]
+mesh = SubResource("BoxMesh_htd6i")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Game/RigidBody3D3"]
+shape = SubResource("BoxShape3D_m7ox3")
+
+[node name="Metal" type="RigidBody3D" parent="Game"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.879, 1.074, 0)
+mass = 0.01
+script = ExtResource("2_safau")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Game/Metal"]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+shape = SubResource("BoxShape3D_pn6dr")
+
+[node name="m1911_bolt" parent="Game/Metal" instance=ExtResource("5_oli1v")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+
+[node name="LightBeam" type="Sprite3D" parent="Game"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.09524, 1.36939, 0)
+material_override = SubResource("ShaderMaterial_wsbbt")
+offset = Vector2(0, 256)
+billboard = 1
+texture = SubResource("NoiseTexture2D_xnpqy")
+
+[node name="Camera3D" type="Camera3D" parent="Game" node_paths=PackedStringArray("hand")]
+transform = Transform3D(1, 0, 0, 0, 0.999561, 0.0296139, 0, -0.0296139, 0.999561, 2.2487, 5.83074, 8.09982)
+script = ExtResource("7_0fgk2")
+hand = NodePath("../Hand")
+
+[editable path="Game/Metal/m1911_bolt"]
